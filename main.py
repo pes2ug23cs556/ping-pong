@@ -1,35 +1,40 @@
 import pygame
 from game.game_engine import GameEngine
+import os
 
-# Initialize pygame/Start application
+# Ensure relative paths work
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 pygame.init()
+pygame.mixer.init()  # initialize sound
 
-# Screen dimensions
 WIDTH, HEIGHT = 800, 600
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Ping Pong - Pygame Version")
+pygame.display.set_caption("Ping Pong")
 
-# Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-# Clock
 clock = pygame.time.Clock()
 FPS = 60
 
-# Game loop
 engine = GameEngine(WIDTH, HEIGHT)
+
+# Optional start sound
+if engine.ball.sound_paddle:
+    engine.ball.sound_paddle.play()
 
 def main():
     running = True
     while running:
         SCREEN.fill(BLACK)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
         engine.handle_input()
-        engine.update()
+        engine.update(SCREEN)
         engine.render(SCREEN)
 
         pygame.display.flip()
